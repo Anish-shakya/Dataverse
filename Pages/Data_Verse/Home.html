@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataVerse Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+
+        .section {
+            padding: 40px 0;
+        }
+
+        .split-column {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .split-column .column {
+            flex: 1;
+            min-width: 45%;
+            padding: 20px;
+        }
+
+        .heading {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .icon{
+            font-size: 10rem;
+        }
+
+        .subheading {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1a73e8;
+            text-align: center;
+            font-weight:bold;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .card-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1a73e8;
+        }
+
+        .card-heading {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .card-description {
+            color: #555555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px auto;
+        max-width: 1000px;
+    }
+
+    .data-table th,
+    .data-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+        font-family: Arial, sans-serif;
+    }
+
+    .data-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+    }
+    .section4-para{
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    .section4-h2{
+        color: #1a73e8;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Second Section -->
+        <div class="section">
+            <div class="subheading">What is DataVerse?</div>
+            <div class="split-column">
+                <div class="column">
+                    <div class="description">
+                                               
+                        DataVerse is an all-in-one web application designed to 
+                        simplify and enhance your data analysis and visualization 
+                        experience. Whether you're working with sales data, stock inventories, or any other dataset, DataVerse provides powerful 
+                        tools to transform raw data into actionable insights. With features 
+                        like data analysis, data visualizations, and  
+                        stock trend predictions, DataVerse is a go-to platform for analysts, 
+                        business professionals, and anyone who wants to make data-driven decisions.
+                         Additionally, our recommendation feature can analyze your sales 
+                         or stock data to highlight top-selling products, optimize restocking strategies, 
+                         and suggest budget-friendly stock recommendations. Unlock the full potential of your data with DataVerse.
+                        
+                    </div>
+                </div>
+        </div>
+
+        <!-- Third Section (Key Features) -->
+        <div class="section">
+            <div class="subheading">Key Features</div>
+            <div class="card-layout">
+                <!-- Data Analysis Card -->
+                <div class="card">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-heading">Data Analysis</div>
+                    <div class="card-description">
+                        Perform comprehensive sales and stock analysis. Upload your datasets, and the app will generate key insights and visuals, allowing you to make informed decisions based on your data.
+                    </div>
+                </div>
+
+                <!-- Visualization Card -->
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <div class="card-heading">Visualization</div>
+                    <div class="card-description">
+                        Upload your dataset and access a powerful visualization panel where you can create custom visualizations to represent your data in the most effective way.
+                    </div>
+                </div>
+
+                <!-- Prediction Card -->
+                <div class="card">
+                    <div class="card-icon">📈</div>
+                    <div class="card-heading">Prediction</div>
+                    <div class="card-description">
+                        Utilize our stock trend prediction feature, which supports accurate forecasting to help you anticipate market trends and make proactive business decisions.
+                    </div>
+                </div>
+
+                <!-- Recommendation Card -->
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-heading">Recommendation</div>
+                    <div class="card-description">
+                        Leverage our recommendation algorithm by uploading your sales or stock dataset. The app will identify top-selling products, advise on restocking strategies, and provide stock recommendations based on your budget and current stock prices.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourth Section (How to Use) -->
+        <div class="section">
+            <div class="subheading">How to Use?</div>
+            <p class="section4-para">
+                In DataVerse, Analysis feature is divided into two key components: Sales Analysis and Stock Analysis, each tailored to deliver targeted insights and enhance your data-driven decision-making.
+            </p>
+        
+            <h2 class="section4-h2">Pharmaceutical Analysis📊</h2>
+            <p class="section4-para">To utilize the Sales Analysis feature, your dataset must include the following columns:</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <td>Sale ID.</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>The date of the sale.</td>
+                    </tr>
+                    <tr>
+                        <th>Product_Name</th>
+                        <td>The name of the product sold.</td>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <td>The category of the product sold.</td>
+                    </tr>
+                    <tr>
+                        <th>Payment_Mode</th>
+                        <td>Mode of payment made by customer.</td>
+                    </tr>
+                    <tr>
+                        <th>Quantity</th>
+                        <td>The number of units sold.</td>
+                    </tr>
+                    <tr>
+                        <th>Cost_Price</th>
+                        <td>The cost price per unit of the product.</td>
+                    </tr>
+                    <tr>
+                        <th>Selling_Price</th>
+                        <td>The selling price per unit of the product.</td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>The amount of product before discount.</td>
+                    </tr>
+                    <tr>
+                        <th>Discount</th>
+                        <td>The discount applied to the product, if any.</td>
+                    </tr>
+                    <tr>
+                        <th>Net_Amount</th>
+                        <td>The net amount after discount.</td>
+                    </tr>
+                </thead>
+            </table>
+        
+            <h2 class="section4-h2">Stock Analysis📊</h2>
+            <p class="section4-para">For the Stock Analysis feature, your dataset should include the following columns:</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <td>The date of the stock data.</td>
+                    </tr>
+                    <tr>
+                        <th>Script</th>
+                        <td>The stock ticker symbol or script name.</td>
+                    </tr>
+                    <tr>
+                        <th>Open</th>
+                        <td>The opening price of the stock for the given date.</td>
+                    </tr>
+                    <tr>
+                        <th>Close</th>
+                        <td>The closing price of the stock for the given date.</td>
+                    </tr>
+                    <tr>
+                        <th>High</th>
+                        <td>The highest price reached by the stock on that date.</td>
+                    </tr>
+                    <tr>
+                        <th>Low</th>
+                        <td>The lowest price reached by the stock on that date.</td>
+                    </tr>
+                    
+                </thead>
+            </table>
+        
+            <p class="section4-para">
+                If your dataset doesn't align with the required schema, you can either modify it to include these specific columns or simply rename the existing columns to fit the required format. Following these guidelines will ensure that the Analysis feature functions correctly.
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>
