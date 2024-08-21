@@ -260,7 +260,6 @@ class PortfolioStockAnalysis:
             st.plotly_chart(fig_high)
             st.write(f"The highest unit of share in your portfolio is {scrip_name} ({company_name}) with {unit_count} units, belonging to the {sector_name} sector.")
 
-
         with col2:
             st.subheader("Low Unit Share")
             low_unit_share = merged_df5.nsmallest(5, 'Current Balance')  # Top 5 scrips with the lowest unit shares
