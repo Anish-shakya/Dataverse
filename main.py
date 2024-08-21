@@ -2,9 +2,11 @@ import streamlit as st
 import pandas as pd
 
 # Page imports
-from Pages.Data_Analysis.Sales_Analysis import SalesAnalysis
+#from Pages.Data_Analysis.Sales_Analysis import SalesAnalysis
 from Pages.Data_Analysis.Pharmaceutical_Sales_Analysis import PharmaceuticalSalesAnalysis
-from Pages.Data_Analysis.Stock_Analysis import StockAnalysis
+#from Pages.Data_Analysis.Stock_Analysis import StockAnalysis
+from Pages.Data_Analysis.NepseStock_Analysis import NepseStockAnalysis
+from Pages.Data_Analysis.Portfolio_Analysis import PortfolioStockAnalysis
 from Pages.Data_Analysis.Describe import Describe
 from Pages.Data_Visualization.Visualization import Visualization
 from Pages.Prediction.Stock_Trend_Prediction import StockTrendPrediction
@@ -44,18 +46,35 @@ elif section == "Analysis":
             st.info("Please upload a CSV file to proceed with the analysis.")
 
     elif dataset_title == "Stock Analysis":
-        st.header("Stock Analysis 📊")
-        uploaded_file = st.file_uploader("Upload your Stock dataset (CSV or XLSX)", type=["csv","xlsx"])
-        
-        if uploaded_file is not None:
-            if uploaded_file.name.endswith('.csv'):
-                df=pd.read_csv(uploaded_file)
-            elif uploaded_file.name.endswith('.xlsx'):
-                df=pd.read_excel(uploaded_file)
-            analysis = StockAnalysis(df)  # Instantiate the class with the DataFrame
-            analysis.show()  # Call the show method to perform analysis
-        else:
-            st.info("Please upload a CSV file to proceed with the analysis.")
+        analysis_type = st.sidebar.selectbox("Choose Analysis type", ["Nepase Stock Analysis", "Portfolio Analysis"])
+
+        if analysis_type == "Nepase Stock Analysis":
+            st.header("Nepse Stock Analysis 📊")
+            uploaded_file = st.file_uploader("Upload your Stock dataset (CSV or XLSX)", type=["csv","xlsx"])
+            
+            if uploaded_file is not None:
+                if uploaded_file.name.endswith('.csv'):
+                    df=pd.read_csv(uploaded_file)
+                elif uploaded_file.name.endswith('.xlsx'):
+                    df=pd.read_excel(uploaded_file)
+                analysis = NepseStockAnalysis(df)  # Instantiate the class with the DataFrame
+                analysis.show()  # Call the show method to perform analysis
+            else:
+                st.info("Please upload a CSV file to proceed with the analysis.")
+
+        elif analysis_type =="Portfolio Analysis":
+            st.header("Portfoli Analysis 📊")
+            uploaded_file = st.file_uploader("Upload your Stock dataset (CSV or XLSX)", type=["csv","xlsx"])
+            
+            if uploaded_file is not None:
+                if uploaded_file.name.endswith('.csv'):
+                    df=pd.read_csv(uploaded_file)
+                elif uploaded_file.name.endswith('.xlsx'):
+                    df=pd.read_excel(uploaded_file)
+                analysis = PortfolioStockAnalysis(df)  # Instantiate the class with the DataFrame
+                analysis.show()  # Call the show method to perform analysis
+            else:
+                st.info("Please upload a CSV file to proceed with the analysis.")
 
 
     # uploaded_file = st.sidebar.file_uploader("Upload your dataset", type=["csv", "xlsx"])

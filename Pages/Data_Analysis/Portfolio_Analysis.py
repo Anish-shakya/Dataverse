@@ -10,7 +10,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-class StockAnalysis:
+class PortfolioStockAnalysis:
     expected_columns = {
         "Date": "datetime64[ns]",
         "Script": "object",
@@ -25,17 +25,17 @@ class StockAnalysis:
 
     def convert_dtypes(self):
         """Convert columns to the expected data types."""
-        for col, dtype in StockAnalysis.expected_columns.items():
+        for col, dtype in PortfolioStockAnalysis.expected_columns.items():
             if col in self.df.columns:
                 self.df[col] = self.df[col].astype(dtype, errors='ignore')
 
     def validate_schema(self):
         """Validate if the dataframe has the required columns with the correct data types."""
-        missing_columns = [col for col in StockAnalysis.expected_columns if col not in self.df.columns]
+        missing_columns = [col for col in PortfolioStockAnalysis.expected_columns if col not in self.df.columns]
         if missing_columns:
             return False, f"Missing columns: {', '.join(missing_columns)}"
         
-        for col, dtype in StockAnalysis.expected_columns.items():
+        for col, dtype in PortfolioStockAnalysis.expected_columns.items():
             if self.df[col].dtype != dtype:
                 return False, f"Column '{col}' does not match the expected data type '{dtype}'."
         
@@ -56,7 +56,7 @@ class StockAnalysis:
         valid, message = self.validate_schema()
         if valid:
             ## Check if Data is pre Processed or not
-            if StockAnalysis.preprocess_stock(self):
+            if PortfolioStockAnalysis.preprocess_stock(self):
                 self.perform_stockeda()
             # Additional analysis logic can be added here
         else:
