@@ -12,62 +12,75 @@ import matplotlib.pyplot as plt
 
 class PortfolioStockAnalysis:
     expected_columns = {
-        "Date": "datetime64[ns]",
-        "Script": "object",
-        "Open": "int64",
-        "Close": "int64",
-        "High": "int64",
-        "Low": "int64",
+        "S.N":"int64",
+        "Scrip": "object",
+        "Current Balance": "int64",
+        "Previous Closing Price": "int64",
+        "Value as of Previous Closing Price": "int64",
+        "Last Transaction Price (LTP)": "int64",
+        "Value as of LTP":"int64"
     }
+
     def __init__(self, dataframe):
-        self.df = dataframe
+        self.newdf = dataframe
         self.convert_dtypes()
 
     def convert_dtypes(self):
         """Convert columns to the expected data types."""
         for col, dtype in PortfolioStockAnalysis.expected_columns.items():
-            if col in self.df.columns:
-                self.df[col] = self.df[col].astype(dtype, errors='ignore')
+            if col in self.newdf.columns:
+                self.newdf[col] = self.newdf[col].astype(dtype, errors='ignore')
 
     def validate_schema(self):
         """Validate if the dataframe has the required columns with the correct data types."""
-        missing_columns = [col for col in PortfolioStockAnalysis.expected_columns if col not in self.df.columns]
+        missing_columns = [col for col in PortfolioStockAnalysis.expected_columns if col not in self.newdf.columns]
         if missing_columns:
             return False, f"Missing columns: {', '.join(missing_columns)}"
         
         for col, dtype in PortfolioStockAnalysis.expected_columns.items():
-            if self.df[col].dtype != dtype:
+            if self.newdf[col].dtype != dtype:
                 return False, f"Column '{col}' does not match the expected data type '{dtype}'."
         
         return True, None
     
-    def preprocess_stock(self):
+    def preprocess_portfoliostock(self):
         """Preprocess the data (you can add more logic here as needed)."""
         # Additional preprocessing steps can be added here
+        df = self.newdf
+        script_data = pd.read_excel('Pages\\Data_Analysis\\Stock\\Script_Market_Cap.xlsx')
+        #st.write(script_data)
+
+        #st.write(df)
+
+        ## Join the user uploaded dataset with script market cap dataset
+        merged_df = pd.merge(df,script_data,on="Scrip",how="left")
+        st.write(merged_df)
+
 
         return True
-    def perform_stockeda(self):
+    def perform_profolioeda(self):
         """Perform exploratory data analysis (EDA) on the dataset."""
-        df = self.df
-        st.write(df)
+
+        return True
 
     def show(self):
         """Display the analysis after validation."""
         valid, message = self.validate_schema()
         if valid:
             ## Check if Data is pre Processed or not
-            if PortfolioStockAnalysis.preprocess_stock(self):
-                self.perform_stockeda()
+            if PortfolioStockAnalysis.preprocess_portfoliostock(self):
+                self.perform_profolioeda()
             # Additional analysis logic can be added here
         else:
             st.sidebar.error(f"Schema does not match. {message}")
             data = [
-            {"Field": "Date", "Description": "	The date of the stock traded."},
-            {"Field": "Script", "Description": "The stock ticker symbol or script name."},
-            {"Field": "Open", "Description": "The opening price of the stock for the given date."},
-            {"Field": "Close", "Description": "The closing price of the stock for the given date."},
-            {"Field": "High", "Description": "The highest price reached by the stock on that date."},
-            {"Field": "Low", "Description": "The lowest price reached by the stock on that date."}
+            {"Field": "S.N", "Description": "Serial Number."},
+            {"Field": "Scrip", "Description": "The stock ticker symbol or script name."},
+            {"Field": "Current Balance", "Description": "Total unit of particular scrip in your portfolio."},
+            {"Field": "Previous Closing Price", "Description": "The previous closing price of the stock."},
+            {"Field": "Value as as Previous Closing Price", "Description": "The total value of the stock based on last closing price."},
+            {"Field": "Last Transaction Price (LTP)", "Description": "The last transaction price of the stock."},
+            {"Field": "Value as of LTP", "Description": "The total value of the stock based on latest closing price."}
             ]
 
             # Convert the list of dictionaries into a DataFrame

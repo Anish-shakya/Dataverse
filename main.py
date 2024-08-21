@@ -63,18 +63,37 @@ elif section == "Analysis":
                 st.info("Please upload a CSV file to proceed with the analysis.")
 
         elif analysis_type =="Portfolio Analysis":
-            st.header("Portfoli Analysis 📊")
+            st.header("Portfolio Analysis 📊")
             uploaded_file = st.file_uploader("Upload your Stock dataset (CSV or XLSX)", type=["csv","xlsx"])
             
             if uploaded_file is not None:
+                newdf =None
+
                 if uploaded_file.name.endswith('.csv'):
                     df=pd.read_csv(uploaded_file)
+                    if df.iloc[-1]['S.N'] == "Total :":
+                        newdf=df.iloc[:-1]
+                    else:
+                        newdf =df
+                        
                 elif uploaded_file.name.endswith('.xlsx'):
                     df=pd.read_excel(uploaded_file)
-                analysis = PortfolioStockAnalysis(df)  # Instantiate the class with the DataFrame
-                analysis.show()  # Call the show method to perform analysis
+                    if df.iloc[-1]['S.N'] == "Total :":
+                        newdf=df.iloc[:-1]
+                    else:
+                        df=newdf
+
+                if newdf is not None:
+                    analysis = PortfolioStockAnalysis(newdf)  # Instantiate the class with the DataFrame
+                    analysis.show()  # Call the show method to perform analysis
+                else:
+                    st.error("There was an issue processing your file. Please try again.")
+
+                # analysis = PortfolioStockAnalysis(newdf)  # Instantiate the class with the DataFrame
+                # analysis.show()  # Call the show method to perform analysis
+
             else:
-                st.info("Please upload a CSV file to proceed with the analysis.")
+                st.info("Please upload a CSV or EXCEL file to proceed with the analysis.")
 
 
     # uploaded_file = st.sidebar.file_uploader("Upload your dataset", type=["csv", "xlsx"])
