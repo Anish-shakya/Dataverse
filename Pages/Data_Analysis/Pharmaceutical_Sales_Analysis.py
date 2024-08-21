@@ -251,13 +251,7 @@ class PharmaceuticalSalesAnalysis:
             fig.update_traces(textinfo='label+percent', textposition='outside')  # Ensure correct display of labels
             st.plotly_chart(fig)
 
-       
-        ### Sales Trend
-        # Sales_Trend = df5.groupby(by='Date',as_index=False)['Net_Amount'].sum()
-        # st.subheader("Sales Trend")
-        # fig = px.line(Sales_Trend,x='Date',y='Net_Amount',title ='Sales Trend Over Time',markers=True,template='plotly_dark')
-        # fig.update_layout(xaxis_title='Date',yaxis_title='Net Sales',xaxis_rangeslider_visible=True)
-        # st.plotly_chart(fig,use_container_width=True)
+
         sales_trend = df5.groupby(by='Date', as_index=False)['Net_Amount'].sum()
     
         # Calculate highest and lowest sales
