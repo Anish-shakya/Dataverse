@@ -68,7 +68,6 @@ elif section == "Analysis":
             
             if uploaded_file is not None:
                 newdf =None
-
                 if uploaded_file.name.endswith('.csv'):
                     df=pd.read_csv(uploaded_file)
                     if df.iloc[-1]['S.N'] == "Total :":
