@@ -11,14 +11,15 @@ import matplotlib.pyplot as plt
 
 class NepseStockAnalysis:
     expected_columns = {
+        "Scrip": "object",
         "Date": "datetime64[ns]",
-        "Script": "object",
         "Open": "int64",
         "Close": "int64",
         "High": "int64",
         "Low": "int64",
-
+        "Sector":"object"
     }
+
     def __init__(self, dataframe):
         self.df = dataframe
         self.convert_dtypes()
@@ -44,13 +45,19 @@ class NepseStockAnalysis:
     def preprocess_stock(self):
         """Preprocess the data (you can add more logic here as needed)."""
         # Additional preprocessing steps can be added here
-
         return True
     
     def perform_stockeda(self):
         """Perform exploratory data analysis (EDA) on the dataset."""
         # URL of the website you want to load
-       
+        df = self.df
+        script_data = pd.read_excel('Pages\\Data_Analysis\\Stock\\Script_Market_Cap.xlsx')
+        script_data = script_data.drop(columns=['S.N'],errors='ignore')
+        #st.write(script_data)
+        #st.write(df)
+        ## Join the user uploaded dataset with script market cap dataset
+        merged_df = pd.merge(df,script_data,on="Scrip",how="left")
+        st.write(merged_df)
         return True
 
     def show(self):

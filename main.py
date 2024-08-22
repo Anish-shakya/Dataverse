@@ -11,8 +11,8 @@ from Pages.Data_Analysis.NepseAlphachart import NepseAlphaChart
 from Pages.Data_Analysis.Describe import Describe
 from Pages.Data_Visualization.Visualization import Visualization
 from Pages.Prediction.Stock_Trend_Prediction import StockTrendPrediction
-from Pages.Recommendation.Movie_Recommendation import MovieRecommendation
-from Pages.Recommendation.Book_Recommendation import BookRecommendation
+from Pages.Recommendation.Stock_Recommendation import StockRecommendation
+from Pages.Recommendation.Sales_Stock_Recommendation import SalesRestockRecommendation
 from Pages.Data_Verse import About_Dataverse
 
 ## app configuration
@@ -29,7 +29,7 @@ if section == "About Dataverse":
 
 elif section == "Analysis":
     st.sidebar.subheader("Analysis Pages")
-    dataset_title = st.sidebar.selectbox("Choose dataset type", ["Pharmaceutical Sales","Sales Analysis", "Stock Analysis", "Describe Dataset"])
+    dataset_title = st.sidebar.selectbox("Choose dataset type", ["Pharmaceutical Sales", "Stock Analysis", "Describe Dataset"])
 
     if dataset_title == "Pharmaceutical Sales":
 
@@ -61,8 +61,10 @@ elif section == "Analysis":
                 analysis = NepseStockAnalysis(df)  # Instantiate the class with the DataFrame
                 analysis.show()  # Call the show method to perform analysis
             else:
-                st.info("Please upload a CSV file to proceed with the analysis.")
-
+                st.info("Please upload a EXCEL or CSV file to proceed with the analysis.")
+               
+    
+            
         elif analysis_type =="Portfolio Analysis":
             st.header("Portfolio Analysis 📊")
             uploaded_file = st.file_uploader("Upload your Stock dataset (CSV or XLSX)", type=["csv","xlsx"])
@@ -122,9 +124,19 @@ elif section == "Analysis":
     #         Describe.show()
         
 elif section == "Visualization":
-    viz= Visualization()
-    viz.show()
-
+    st.header("Data Visualization 📊")
+    uploaded_file = st.file_uploader("Upload your dataset (CSV or XLSX)", type=["csv","xlsx"])
+            
+    if uploaded_file is not None:
+        if uploaded_file.name.endswith('.csv'):
+            df=pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.xlsx'):
+            df=pd.read_excel(uploaded_file)
+            analysis = Visualization(df)  # Instantiate the class with the DataFrame
+            analysis.show() # Call the show method to perform analysis
+    else:
+        st.info("Please upload an EXCEL or CSV file to proceed with the visualization.")
+    
 elif section == "Prediction":
     StockTrendPrediction.show()
 
@@ -132,6 +144,6 @@ elif section == "Recommendation":
     st.sidebar.subheader("Recommendation Pages")
     page = st.sidebar.radio("Select a page:", ["Sales Restock Recommendation", "Stock Recommendation"])
     if page == "Sales Restock Recommendation":
-        MovieRecommendation.show()
+        SalesRestockRecommendation.show()
     elif page == "Stock Recommendation":
-        BookRecommendation.show()
+        StockRecommendation.show()
