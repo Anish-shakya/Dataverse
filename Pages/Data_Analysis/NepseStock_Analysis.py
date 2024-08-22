@@ -46,10 +46,12 @@ class NepseStockAnalysis:
         # Additional preprocessing steps can be added here
 
         return True
+    
     def perform_stockeda(self):
         """Perform exploratory data analysis (EDA) on the dataset."""
-        df = self.df
-        st.write(df)
+        # URL of the website you want to load
+       
+        return True
 
     def show(self):
         """Display the analysis after validation."""

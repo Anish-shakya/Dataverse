@@ -7,6 +7,7 @@ from Pages.Data_Analysis.Pharmaceutical_Sales_Analysis import PharmaceuticalSale
 #from Pages.Data_Analysis.Stock_Analysis import StockAnalysis
 from Pages.Data_Analysis.NepseStock_Analysis import NepseStockAnalysis
 from Pages.Data_Analysis.Portfolio_Analysis import PortfolioStockAnalysis
+from Pages.Data_Analysis.NepseAlphachart import NepseAlphaChart
 from Pages.Data_Analysis.Describe import Describe
 from Pages.Data_Visualization.Visualization import Visualization
 from Pages.Prediction.Stock_Trend_Prediction import StockTrendPrediction
@@ -46,7 +47,7 @@ elif section == "Analysis":
             st.info("Please upload a CSV file to proceed with the analysis.")
 
     elif dataset_title == "Stock Analysis":
-        analysis_type = st.sidebar.selectbox("Choose Analysis type", ["Nepase Stock Analysis", "Portfolio Analysis"])
+        analysis_type = st.sidebar.selectbox("Choose Analysis type", ["Portfolio Analysis","Nepase Stock Analysis", "Nespse Alpha Chart"])
 
         if analysis_type == "Nepase Stock Analysis":
             st.header("Nepse Stock Analysis 📊")
@@ -94,6 +95,11 @@ elif section == "Analysis":
             else:
                 st.info("Please upload a CSV or EXCEL file to proceed with the analysis.")
 
+        elif analysis_type == "Nespse Alpha Chart":
+            NepseAlphaChart.showchart()
+
+        
+
 
     # uploaded_file = st.sidebar.file_uploader("Upload your dataset", type=["csv", "xlsx"])
 
@@ -124,8 +130,8 @@ elif section == "Prediction":
 
 elif section == "Recommendation":
     st.sidebar.subheader("Recommendation Pages")
-    page = st.sidebar.radio("Select a page:", ["Movie Recommendation", "Book Recommendation"])
-    if page == "Movie Recommendation":
+    page = st.sidebar.radio("Select a page:", ["Sales Restock Recommendation", "Stock Recommendation"])
+    if page == "Sales Restock Recommendation":
         MovieRecommendation.show()
-    elif page == "Book Recommendation":
+    elif page == "Stock Recommendation":
         BookRecommendation.show()

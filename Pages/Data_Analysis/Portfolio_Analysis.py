@@ -117,15 +117,7 @@ class PortfolioStockAnalysis:
         merged_df5 = merged_df4[(merged_df4['Value as of LTP'] >= min_balance) & (merged_df4['Value as of LTP'] <= max_balance)]
 
         # Display the filtered dataset
-        st.write(merged_df5)
-        # scrip = merged_df['Scrip'].unique()
-        # selected_scrip = st.sidebar.multiselect('Select Scrip',scrip)
-        # if not selected_scrip:
-        #     merged_df2 = merged_df.copy()
-        # else:
-        #     merged_df2 = merged_df2[merged_df2['Scrip'].isin(selected_scrip)]
-
-       
+        st.write(merged_df5)       
 
         ###Porfolio Metrics
         st.header("Your Portfolio Key Metrics📊")
@@ -401,6 +393,208 @@ class PortfolioStockAnalysis:
 
         # Add explanation
         st.write("This table shows the top share (highest value) in each sector of your portfolio. The sectors are listed along with the corresponding top share, the number of units, and the value as per the latest trading price (LTP).")
+        
+        #########################
+        st.header("Current Market Capital of Your Invested Shares 📊")
+         # Ensure 'market capitalization (Rs)' column is numeric and handle any conversion if needed
+        merged_df5['Market Capitalization (Rs)'] = pd.to_numeric(merged_df5['Market Capitalization (Rs)'], errors='coerce')
+
+        top_5_df = merged_df5.nlargest(5, 'Current Balance')
+        # Sort the DataFrame by 'Market Capitalization (Rs)' in descending order
+        top_5_df = top_5_df.sort_values(by='Market Capitalization (Rs)', ascending=False)
+        # Custom function to format the labels in billions
+        def format_billions(value):
+            if value >= 1e9:
+                return f"{value / 1e9:.0f}B"
+            elif value >= 1e6:
+                return f"{value / 1e6:.1f}M"
+            else:
+                return f"{value:.1f}"
+        # Apply formatting to each value in the dataset
+        top_5_df['Formatted Market Capitalization'] = top_5_df['Market Capitalization (Rs)'].apply(format_billions)
+        # Plot market capitalizationds
+        fig_market_cap = px.bar(
+            top_5_df,
+            x='Scrip',
+            y='Market Capitalization (Rs)',
+            title='Market Capitalization of Your Top 5 Portfolio Shares',
+            labels={'Market Capitalization (Rs)': 'Market Capitalization (Rs)'},
+            color='Company',
+            text_auto=True
+        )
+
+        # Customize the appearance of the chart
+        fig_market_cap.update_layout(
+            xaxis_title='Scrip',
+            yaxis_title='Market Capitalization (Rs)',
+            xaxis_tickangle=-45  # Tilt x-axis labels for better readability
+        )
+        max_y = top_5_df['Market Capitalization (Rs)'].max()
+        fig_market_cap.update_yaxes(range=[0, max_y * 1.20])
+        
+        # Update data label font size and format
+        fig_market_cap.update_traces(
+            textfont_size=14# Adjust the font size as needed
+        )
+
+        st.plotly_chart(fig_market_cap)
+        # Explanation
+        top_share = top_5_df.iloc[0]
+        scrip_name = top_share['Scrip']
+        market_cap = top_share['Market Capitalization (Rs)']
+        formatted_market_cap = f"{market_cap / 1e9:.1f}B"
+
+        st.write(f"The chart above shows the market capitalization of the top 5 shares in your portfolio based on the highest units available. "
+                f"The largest market capitalization share is {scrip_name}, with a market cap of {formatted_market_cap}. "
+                f"This indicates that these shares have a significant presence in the market, reflecting their strong financial performance. "
+                f"The chart helps you understand the market value of the shares you hold, allowing you to assess their impact on your overall investment portfolio.")
+        
+        ##################### low market cap analysis
+        # Get the bottom 5 shares with the lowest 'Current Balance'
+        low_5_df = merged_df5.nsmallest(5, 'Current Balance')
+
+        # Sort the DataFrame by 'Market Capitalization (Rs)' in ascending order (lowest to highest)
+        low_5_df = low_5_df.sort_values(by='Market Capitalization (Rs)', ascending=True)
+
+        # Custom function to format the labels in billions
+        def format_billions(value):
+            if value >= 1e9:
+                return f"{value / 1e9:.1f}B"
+            elif value >= 1e6:
+                return f"{value / 1e6:.1f}M"
+            else:
+                return f"{value:.1f}"
+
+        # Apply formatting to each value in the dataset
+        low_5_df['Formatted Market Capitalization'] = low_5_df['Market Capitalization (Rs)'].apply(format_billions)
+
+        # Plot market capitalizations
+        fig_low_market_cap = px.bar(
+            low_5_df,
+            x='Scrip',
+            y='Market Capitalization (Rs)',
+            title='Market Capitalization of Your Lowest 5 Portfolio Shares',
+            labels={'Market Capitalization (Rs)': 'Market Capitalization (Rs)'},
+            color='Company',
+            text_auto=True
+        )
+
+        # Customize the appearance of the chart
+        fig_low_market_cap.update_layout(
+            xaxis_title='Scrip',
+            yaxis_title='Market Capitalization (Rs)',
+            xaxis_tickangle=-45  # Tilt x-axis labels for better readability
+        )
+
+        # Update y-axis range
+        max_y = low_5_df['Market Capitalization (Rs)'].max()
+        fig_low_market_cap.update_yaxes(range=[0, max_y * 1.20])
+
+        # Update data label font size and format
+        fig_low_market_cap.update_traces(
+            textfont_size=14,  # Adjust the font size as needed
+        )
+
+        # Show chart
+        st.plotly_chart(fig_low_market_cap)
+
+        # Explanation
+        low_share = low_5_df.iloc[0]
+        scrip_name = low_share['Scrip']
+        market_cap = low_share['Market Capitalization (Rs)']
+        formatted_market_cap = f"{market_cap / 1e9:.1f}B"
+
+        st.write(f"The chart above displays the market capitalization of the 5 shares in your portfolio with the lowest units. "
+                f"The share with the smallest market capitalization is {scrip_name}, with a market cap of {formatted_market_cap}. "
+                f"This indicates that these shares have a relatively lower market value compared to others in your portfolio. "
+                f"The chart helps you understand the market value of these lesser valued shares and assess their impact on your investment portfolio.")
+        
+
+        st.title('Share Volatility Analysis')
+        col1,col2 = st.columns(2)
+        with col1:
+            # Sort the DataFrame by 'Price Change (%)' in descending order
+            increase_change_share = merged_df5.nlargest(5, 'Price Change (%)')
+
+            fig_high = px.bar(
+                    increase_change_share,
+                    x='Scrip',
+                    y='Price Change (%)',
+                    title="Increased Share",
+                    labels={'Price Change (%)': 'Percent Increase'},
+                    color='Scrip',
+                    text_auto=True
+                )
+            st.plotly_chart(fig_high)
+        with col2:
+            # Sort the DataFrame by 'Price Change (%)' in descending order
+            decrease_change_share = merged_df5.nsmallest(5, 'Price Change (%)')
+
+            fig_high = px.bar(
+                    decrease_change_share,
+                    x='Scrip',
+                    y='Price Change (%)',
+                    title="Increased Share",
+                    labels={'Price Change (%)': 'Percent Decreased'},
+                    color='Scrip',
+                    text_auto=True
+                )
+            st.plotly_chart(fig_high)
+        # Explanation
+        st.write(
+            "The chart above shows the volatility of shares in your portfolio based on the Price Change Percentage. "
+            "Shares with higher Price Change (%) values indicate greater volatility, meaning their prices are fluctuating more significantly. "
+            "You should monitor these volatile shares closely as they may represent higher risk or opportunity in the market."
+        )
+
+
+
+
+        st.header("Correlation Analysis")
+        # Ensure columns are numeric
+        merged_df5['Market Capitalization (Rs)'] = pd.to_numeric(merged_df5['Market Capitalization (Rs)'], errors='coerce')
+        merged_df5['Listed Share'] = pd.to_numeric(merged_df5['Listed Share'], errors='coerce')
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Calculate the correlation matrix for LTP and Market Capitalization
+            corr_matrix_ltp_market_cap = merged_df5[['Last Transaction Price (LTP)', 'Market Capitalization (Rs)']].corr()
+            correlation_ltp_market_cap = corr_matrix_ltp_market_cap.iloc[0, 1]
+            
+            # Set up the matplotlib figure
+            plt.figure(figsize=(8, 6))
+            
+            # Create the heatmap
+            sns.heatmap(corr_matrix_ltp_market_cap, annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
+            
+            # Set the title and display the heatmap
+            plt.title('Correlation Heatmap: LTP vs Market Capitalization')
+            st.pyplot(plt.gcf())
+            
+            # Display correlation coefficient
+            st.write(f"The correlation coefficient between Last Transaction Price (LTP) and Market Capitalization is: {correlation_ltp_market_cap:.2f}")
+
+
+        with col2:
+            # Calculate the correlation matrix for LTP and Listed Share
+            corr_matrix_ltp_listed_share = merged_df5[['Last Transaction Price (LTP)', 'Listed Share']].corr()
+            correlation_ltp_listed_share = corr_matrix_ltp_listed_share.iloc[0, 1]
+            
+            # Set up the matplotlib figure
+            plt.figure(figsize=(8, 6))
+            
+            # Create the heatmap
+            sns.heatmap(corr_matrix_ltp_listed_share, annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
+            
+            # Set the title and display the heatmap
+            plt.title('Correlation Heatmap: LTP vs Listed Share')
+            st.pyplot(plt.gcf())
+            
+            # Display correlation coefficient
+            st.write(f"The correlation coefficient between Last Transaction Price (LTP) and Listed Shares is: {correlation_ltp_listed_share:.2f}")
+
+     
         return True
 
     def show(self):
