@@ -252,7 +252,7 @@ class PortfolioStockAnalysis:
                 high_unit_share,
                 x='Scrip',
                 y='Current Balance',
-                title="Top 10 High Unit Shares",
+                title="Top 5 High Unit Shares",
                 labels={'Current Balance': 'Units'},
                 color='Scrip',
                 text_auto=True
@@ -273,7 +273,7 @@ class PortfolioStockAnalysis:
                 low_unit_share,
                 x='Scrip',
                 y='Current Balance',
-                title="Top 10 Low Unit Shares",
+                title="Top 5 Low Unit Shares",
                 labels={'Current Balance': 'Units'},
                 color='Scrip',
                 text_auto=True
@@ -300,7 +300,7 @@ class PortfolioStockAnalysis:
                 high_value_share,
                 x='Scrip',
                 y='Value as of LTP',
-                title="Top 10 High Value Shares",
+                title="Top 5 High Value Shares",
                 labels={'Value as of LTP': 'Value'},
                 color='Scrip',
                 text_auto=True
@@ -332,7 +332,7 @@ class PortfolioStockAnalysis:
                 low_value_share,
                 x='Scrip',
                 y='Value as of LTP',
-                title="Top 10 Low Value Shares",
+                title="Top 5 Low Value Shares",
                 labels={'Value as of LTP': 'Value'},
                 color='Scrip',
                 text_auto=True
@@ -345,6 +345,62 @@ class PortfolioStockAnalysis:
             
             # Write the message with the lowest scrip details
             st.write(f"The lowest value share in your portfolio is {scrip_name_low} ({company_name_low}) with a value of {value_amount_low}, belonging to the {sector_name_low} sector.")
+
+        st.header("Sector Analysis📊")
+        sector_unit_distribution = merged_df5.groupby('Sector')['Current Balance'].sum()
+        sector_value_distribution = merged_df5.groupby('Sector')['Value as of LTP'].sum()
+
+        col1,col2 = st.columns(2)
+
+        with col1:
+            # Unit Distribution Sector-wise (Percentage)
+            fig_unit_distribution = px.pie(
+                sector_unit_distribution.reset_index(),
+                names='Sector',
+                values='Current Balance',
+                title='Unit Distribution Sector-wise (Percentage)',
+                labels={'Current Balance': 'Units'},
+                hole=0.6
+            )
+            fig_unit_distribution.update_traces(textinfo='percent', textfont=dict(size=14))
+            st.plotly_chart(fig_unit_distribution)
+            high_unit_sector = sector_unit_distribution.nlargest(5).reset_index()
+            st.write(f"The sector with the highest share units is {sector_unit_distribution.idxmax()} with a total of {sector_unit_distribution.max():,.2f} units, making up {sector_unit_distribution.max()/sector_unit_distribution.sum()*100:.1f}% of the portfolio.")
+        
+        with col2:
+            # Value Distribution Sector-wise (Percentage)
+            fig_value_distribution = px.pie(
+                sector_value_distribution.reset_index(),
+                names='Sector',
+                values='Value as of LTP',
+                title='Value Distribution Sector-wise (Percentage)',
+                labels={'Value as of LTP': 'Value'},
+                hole=0.6
+            )
+            fig_value_distribution.update_traces(textinfo='percent', textfont=dict(size=14))
+            st.plotly_chart(fig_value_distribution)
+            st.write(f"The sector with the highest portfolio value is {sector_value_distribution.idxmax()} with a value of Rs.{sector_value_distribution.max():,.1f}, representing {sector_value_distribution.max()/sector_value_distribution.sum()*100:.1f}% of the total portfolio value.")
+
+         # Display the table in Streamlit
+        st.subheader("Sector-wise Top Share Analysis📊")
+        # Calculate the top share in each sector
+        top_shares_by_sector = merged_df5.loc[merged_df5.groupby('Sector')['Value as of LTP'].idxmax()]
+
+        # Select relevant columns for the table
+        sector_table = top_shares_by_sector[['Sector', 'Scrip', 'Company', 'Current Balance', 'Value as of LTP']]
+
+        # Format the 'Value as of LTP' and 'Current Balance' columns for readability
+        sector_table['Value as of LTP'] = sector_table['Value as of LTP'].apply(lambda x: f"Rs.{x:,.0f}")
+        sector_table['Current Balance'] = sector_table['Current Balance'].apply(lambda x: f"{x:,.0f}")
+        
+        sector_table.reset_index(drop=True, inplace=True)
+        sector_table.index = sector_table.index + 1
+
+       
+        st.table(sector_table)
+
+        # Add explanation
+        st.write("This table shows the top share (highest value) in each sector of your portfolio. The sectors are listed along with the corresponding top share, the number of units, and the value as per the latest trading price (LTP).")
         return True
 
     def show(self):

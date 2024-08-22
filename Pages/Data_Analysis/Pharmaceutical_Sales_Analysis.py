@@ -302,7 +302,7 @@ class PharmaceuticalSalesAnalysis:
                     sales_trend['Net_Amount'].max() + 0.5 * sales_trend['Net_Amount'].max()]
             ),
             xaxis_title='Date',
-            xaxis_rangeslider_visible=True
+            xaxis_rangeslider_visible=False
         )
         st.plotly_chart(fig, use_container_width=True, height=600)  # Adjust the height as needed
 
@@ -402,7 +402,7 @@ class PharmaceuticalSalesAnalysis:
                     profit_trend['Profit'].max() + 0.5 * profit_trend['Profit'].max()]
             ),
             xaxis_title='Date',
-            xaxis_rangeslider_visible=True
+            xaxis_rangeslider_visible=False
         )
 
         st.plotly_chart(fig, use_container_width=True, height=600)  # Adjust the height as needed
