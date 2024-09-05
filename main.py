@@ -146,4 +146,5 @@ elif section == "Recommendation":
     if page == "Sales Restock Recommendation":
         SalesRestockRecommendation.show()
     elif page == "Stock Recommendation":
-        StockRecommendation.show()
+        StockRecommendation.show() 
+    
