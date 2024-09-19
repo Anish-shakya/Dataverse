@@ -98,29 +98,6 @@ elif section == "Analysis":
 
         elif analysis_type == "Nespse Alpha Chart":
             NepseAlphaChart.showchart()
-
-        
-
-
-    # uploaded_file = st.sidebar.file_uploader("Upload your dataset", type=["csv", "xlsx"])
-
-    # if uploaded_file:
-    #     if uploaded_file.name.endswith(".csv"):
-    #         df = pd.read_csv(uploaded_file)
-    #     elif uploaded_file.name.endswith(".xlsx"):
-    #         df = pd.read_excel(uploaded_file)
-
-    #     if dataset_title == "Sales Dataset":
-    #         analysis = SalesAnalysis(df)
-    #         analysis.show()
-    #     elif dataset_title == "Pharmaceutical Sales":
-    #         analysis = PharmaceuticalSalesAnalysis(df)
-    #         analysis.show()
-    #     elif dataset_title == "Stock Dataset":
-    #         analysis = StockAnalysis(df)
-    #         analysis.show()
-    #     elif dataset_title == "Describe Dataset":
-    #         Describe.show()
         
 elif section == "Visualization":
     st.header("Data Visualization 📊")
@@ -141,6 +118,7 @@ elif section == "Prediction":
     Prediction_title = st.sidebar.selectbox("Choose Market type", ["Nepse Stock Market", "Global Stock Market"])
     if Prediction_title == 'Nepse Stock Market':
         st.header("Nepse Stock Prediction Using LTSM📊")
+
     elif Prediction_title == 'Global Stock Market':
         st.header("Global Stock Prectiion Using SARIMA / ARIMA Model 📊")
 
