@@ -4,10 +4,7 @@ import pandas as pd
 from pygwalker.api.streamlit import StreamlitRenderer
 class Visualization:
     def __init__(self, dataframe=None):
-        self.df = dataframe
-
-    
-        
+        self.df = dataframe        
 
     def load_dashboard(self):
         df=self.df
