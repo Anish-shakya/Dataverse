@@ -117,8 +117,7 @@ elif section == "Prediction":
     st.sidebar.subheader("Stock Prediction Page")
     Prediction_title = st.sidebar.selectbox("Choose Market type", ["Nepse Stock Market", "Global Stock Market"])
     if Prediction_title == 'Nepse Stock Market':
-        st.header("Nepse Stock Prediction Using LTSM📊")
-
+        NepseStockPrediction.show()
     elif Prediction_title == 'Global Stock Market':
         st.header("Global Stock Prectiion Using SARIMA / ARIMA Model 📊")
 
