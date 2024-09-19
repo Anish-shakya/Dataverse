@@ -1,6 +1,6 @@
 import streamlit as st
 
-class StockTrendPrediction:
+class NepseStockPrediction:
     def show():
         st.title("Stock Trend Prediction")
    

@@ -10,7 +10,8 @@ from Pages.Data_Analysis.Portfolio_Analysis import PortfolioStockAnalysis
 from Pages.Data_Analysis.NepseAlphachart import NepseAlphaChart
 from Pages.Data_Analysis.Describe import Describe
 from Pages.Data_Visualization.Visualization import Visualization
-from Pages.Prediction.Stock_Trend_Prediction import StockTrendPrediction
+from Pages.Prediction.Global_Stock_Prediction import GlobalStockPrediction
+from Pages.Prediction.Nepse_Stock_Prediction import NepseStockPrediction
 from Pages.Recommendation.Stock_Recommendation import StockRecommendation
 from Pages.Recommendation.Sales_Stock_Recommendation import SalesRestockRecommendation
 from Pages.Data_Verse import About_Dataverse
@@ -62,8 +63,6 @@ elif section == "Analysis":
                 analysis.show()  # Call the show method to perform analysis
             else:
                 st.info("Please upload a EXCEL or CSV file to proceed with the analysis.")
-               
-    
             
         elif analysis_type =="Portfolio Analysis":
             st.header("Portfolio Analysis 📊")
@@ -138,7 +137,12 @@ elif section == "Visualization":
         st.info("Please upload an EXCEL or CSV file to proceed with the visualization.")
     
 elif section == "Prediction":
-    StockTrendPrediction.show()
+    st.sidebar.subheader("Stock Prediction Page")
+    Prediction_title = st.sidebar.selectbox("Choose Market type", ["Nepse Stock Market", "Global Stock Market"])
+    if Prediction_title == 'Nepse Stock Market':
+        st.header("Nepse Stock Prediction Using LTSM📊")
+    elif Prediction_title == 'Global Stock Market':
+        st.header("Global Stock Prectiion Using SARIMA / ARIMA Model 📊")
 
 elif section == "Recommendation":
     st.sidebar.subheader("Recommendation Pages")
