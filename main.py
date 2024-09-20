@@ -119,7 +119,8 @@ elif section == "Prediction":
     if Prediction_title == 'Nepse Stock Market':
         NepseStockPrediction.show()
     elif Prediction_title == 'Global Stock Market':
-        GlobalStockPrediction.show()
+        global_app = GlobalStockPrediction()  # Create an instance of GlobalStockPrediction
+        global_app.show()
 
 # elif section == "Recommendation":
 #     st.sidebar.subheader("Recommendation Pages")
