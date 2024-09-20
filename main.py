@@ -20,7 +20,7 @@ from Pages.Data_Verse import About_Dataverse
 st.set_page_config(page_title="Data Verse",layout="wide")
 # Sidebar navigation
 st.sidebar.title("Data Verse")
-section = st.sidebar.radio("Navigation Menu", ["About Dataverse", "Analysis", "Visualization", "Prediction", "Recommendation"])
+section = st.sidebar.radio("Navigation Menu", ["About Dataverse", "Analysis", "Visualization", "Prediction"])
 
 
 
@@ -119,13 +119,13 @@ elif section == "Prediction":
     if Prediction_title == 'Nepse Stock Market':
         NepseStockPrediction.show()
     elif Prediction_title == 'Global Stock Market':
-        st.header("Global Stock Prectiion Using SARIMA / ARIMA Model 📊")
+        GlobalStockPrediction.show()
 
-elif section == "Recommendation":
-    st.sidebar.subheader("Recommendation Pages")
-    page = st.sidebar.radio("Select a page:", ["Sales Restock Recommendation", "Stock Recommendation"])
-    if page == "Sales Restock Recommendation":
-        SalesRestockRecommendation.show()
-    elif page == "Stock Recommendation":
-        StockRecommendation.show() 
+# elif section == "Recommendation":
+#     st.sidebar.subheader("Recommendation Pages")
+#     page = st.sidebar.radio("Select a page:", ["Sales Restock Recommendation", "Stock Recommendation"])
+#     if page == "Sales Restock Recommendation":
+#         SalesRestockRecommendation.show()
+#     elif page == "Stock Recommendation":
+#         StockRecommendation.show() 
     
