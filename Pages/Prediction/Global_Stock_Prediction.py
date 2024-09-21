@@ -101,9 +101,11 @@ class GlobalStockPrediction:
         self.predictions = pd.DataFrame(self.predictions)
         self.predictions.insert(0, 'Date', self.predictions.index)
         self.predictions.reset_index(drop=True, inplace=True)
-
-        st.write("## Predictions", self.predictions)
-        st.write("## Actual Data", self.data)
+        col1,col2 = st.columns(2)
+        with col2:
+            st.write("## Predictions", self.predictions)
+        with col1:
+            st.write("## Actual Data", self.data)
         self.plot_predictions()
 
     def plot_predictions(self):
