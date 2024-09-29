@@ -135,7 +135,7 @@ class GlobalStockPrediction:
                 hide_plots = True
             else:
                 hide_plots = False
-
+ 
     def show(self):
         """Main function to display the app."""
         st.header("Global Stock Trend Prediction Using SARIMA Model 📊")
