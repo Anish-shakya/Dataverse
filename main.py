@@ -2,10 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Page imports
-#from Pages.Data_Analysis.Sales_Analysis import SalesAnalysis
-from Pages.Data_Analysis.Pharmaceutical_Sales_Analysis import PharmaceuticalSalesAnalysis
-#from Pages.Data_Analysis.Stock_Analysis import StockAnalysis
-from Pages.Data_Analysis.NepseStock_Analysis import NepseStockAnalysis
+from Pages.Data_Analysis.Sales_Analysis import SalesAnalysis
 from Pages.Data_Analysis.Portfolio_Analysis import PortfolioStockAnalysis
 from Pages.Data_Analysis.NepseAlphachart import NepseAlphaChart
 from Pages.Data_Visualization.Visualization import Visualization
@@ -40,15 +37,15 @@ class Dataverse:
 
     def analysis_section(self):
         st.sidebar.subheader("Analysis Pages")
-        dataset_title = st.sidebar.selectbox("Choose dataset type", ["Pharmaceutical Sales", "Stock Analysis"])
+        dataset_title = st.sidebar.selectbox("Choose dataset type", ["Sales Analysis", "Stock Analysis"])
 
-        if dataset_title == "Pharmaceutical Sales":
-            self.pharmaceutical_sales_analysis()
+        if dataset_title == "Sales Analysis":
+            self.sales_analysis()
         elif dataset_title == "Stock Analysis":
             self.stock_analysis()
 
-    def pharmaceutical_sales_analysis(self):
-        st.header("Pharmaceutical Sales Analysis 📊")
+    def sales_analysis(self):
+        st.header("Sales Analysis 📊")
         uploaded_file = st.file_uploader("Upload your pharmaceutical sales dataset (CSV or XLSX)", type=["csv", "xlsx"])
 
         if uploaded_file is not None:
@@ -56,7 +53,7 @@ class Dataverse:
                 df = pd.read_csv(uploaded_file)
             elif uploaded_file.name.endswith('.xlsx'):
                 df = pd.read_excel(uploaded_file)
-            analysis = PharmaceuticalSalesAnalysis(df)
+            analysis = SalesAnalysis(df)
             analysis.show()
         else:
             st.info("Please upload a CSV file to proceed with the analysis.")

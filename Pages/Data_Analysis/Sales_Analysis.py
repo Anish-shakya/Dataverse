@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 
 
-class PharmaceuticalSalesAnalysis:
+class SalesAnalysis:
     expected_columns = {
         "ID": "object",
         "Date": "datetime64[ns]",
@@ -31,17 +31,17 @@ class PharmaceuticalSalesAnalysis:
 
     def convert_dtypes(self):
         """Convert columns to the expected data types."""
-        for col, dtype in PharmaceuticalSalesAnalysis.expected_columns.items():
+        for col, dtype in SalesAnalysis.expected_columns.items():
             if col in self.df.columns:
                 self.df[col] = self.df[col].astype(dtype, errors='ignore')
 
     def validate_schema(self):
         """Validate if the dataframe has the required columns with the correct data types."""
-        missing_columns = [col for col in PharmaceuticalSalesAnalysis.expected_columns if col not in self.df.columns]
+        missing_columns = [col for col in SalesAnalysis.expected_columns if col not in self.df.columns]
         if missing_columns:
             return False, f"Missing columns: {', '.join(missing_columns)}"
         
-        for col, dtype in PharmaceuticalSalesAnalysis.expected_columns.items():
+        for col, dtype in SalesAnalysis.expected_columns.items():
             if self.df[col].dtype != dtype:
                 return False, f"Column '{col}' does not match the expected data type '{dtype}'."
         
@@ -86,8 +86,9 @@ class PharmaceuticalSalesAnalysis:
         self.display_kpis(filtered_df)
         self.display_sales_insights(filtered_df)
         self.display_profit_insights(filtered_df)
+        self.display_profit_trend(filtered_df)
+        self.display_top_profit_products(filtered_df)
 
-        # self.display_correlation_analysis(filtered_df)
 
     def filter_data_by_date(self, start_date, end_date):
         """Filter data based on selected date range."""
@@ -153,18 +154,37 @@ class PharmaceuticalSalesAnalysis:
         """Display sales insights through various visualizations."""
         st.header("Sales Key Insights📊")
         col1, col2 = st.columns(2)
+        col3,col4 = st.columns(2)
+        with col1:
+            sales_by_month = df.groupby(by=['MonthName'], as_index=False)['Net_Amount'].sum().sort_values('MonthName', key=lambda x: pd.to_datetime(x, format='%B'))
+            self.plot_bar_chart(col1, sales_by_month, "Net Sales Over Month", 'MonthName', 'Net_Amount')
+             # Insight for sales by month
+            max_sales_month = sales_by_month.loc[sales_by_month['Net_Amount'].idxmax()]['MonthName']
+            max_sales_value = sales_by_month['Net_Amount'].max()
+            st.write(f"**Insight:** The highest sales occurred in **{max_sales_month}**, with a total of **{max_sales_value:,.2f}**.")
+            
+        with col2:
+            sales_by_dayname = df.groupby(by=['DayName'], as_index=False)['Net_Amount'].sum()
+            self.plot_bar_chart(col2, sales_by_dayname, "Net Sales Over Day of Week", 'DayName', 'Net_Amount')
+            # Insight for sales by day of the week
+            max_sales_day = sales_by_dayname.loc[sales_by_dayname['Net_Amount'].idxmax()]['DayName']
+            max_sales_value_day = sales_by_dayname['Net_Amount'].max()
+            st.write(f"**Insight:** The highest sales happened on **{max_sales_day}**, totaling **{max_sales_value_day:,.2f}**.")
 
-        sales_by_month = df.groupby(by=['MonthName'], as_index=False)['Net_Amount'].sum().sort_values('MonthName', key=lambda x: pd.to_datetime(x, format='%B'))
-        self.plot_bar_chart(col1, sales_by_month, "Net Sales Over Month", 'MonthName', 'Net_Amount')
-
-        sales_by_dayname = df.groupby(by=['DayName'], as_index=False)['Net_Amount'].sum()
-        self.plot_bar_chart(col2, sales_by_dayname, "Net Sales Over Day of Week", 'DayName', 'Net_Amount')
-
-        sales_by_paymentmode = df.groupby(by=['Payment_Mode'], as_index=False)['Net_Amount'].sum()
-        self.plot_pie_chart(col1, sales_by_paymentmode, "Payment Mode Sales Distribution", 'Payment_Mode', 'Net_Amount')
-
-        top_categories = df.groupby('Category', as_index=False)['Net_Amount'].sum().sort_values(by='Net_Amount', ascending=False).head(5)
-        self.plot_pie_chart(col2, top_categories, "Top 5 Sales by Category", 'Category', 'Net_Amount')
+        with col3:
+            sales_by_paymentmode = df.groupby(by=['Payment_Mode'], as_index=False)['Net_Amount'].sum()
+            self.plot_pie_chart(col1, sales_by_paymentmode, "Payment Mode Sales Distribution", 'Payment_Mode', 'Net_Amount')
+            # Insight for sales by payment mode
+            max_sales_paymentmode = sales_by_paymentmode.loc[sales_by_paymentmode['Net_Amount'].idxmax()]['Payment_Mode']
+            max_sales_value_paymentmode = sales_by_paymentmode['Net_Amount'].max()
+            st.write(f"**Insight:** Most sales were made through **{max_sales_paymentmode}**, contributing **{max_sales_value_paymentmode:,.2f}** in total sales.")
+        with col4:
+            top_categories = df.groupby('Category', as_index=False)['Net_Amount'].sum().sort_values(by='Net_Amount', ascending=False).head(5)
+            self.plot_pie_chart(col2, top_categories, "Top 5 Sales by Category", 'Category', 'Net_Amount')
+            # Insight for top categories
+            top_category = top_categories.iloc[0]['Category']
+            top_category_sales = top_categories.iloc[0]['Net_Amount']
+            st.write(f"**Insight:** The category with the highest sales is **{top_category}**, with a total of **{top_category_sales:,.2f}** in sales.")
 
         self.display_sales_trend(df)
         self.display_top_sold_products(df)
@@ -200,13 +220,29 @@ class PharmaceuticalSalesAnalysis:
                                   textposition='bottom center', marker=dict(color='green', size=10)))
 
         st.plotly_chart(fig)
+        # Shortened explanation
+        st.write(f"""
+        **Sales Trend Insight:**
+        
+        This chart displays the daily sales trend over time. The **highest sales** occurred on **{highest_sales_date['Date']}** with a total of 
+        **Rs{highest_sales_date['Net_Amount']:,.2f}**, while the **lowest sales** were on **{lowest_sales_date['Date']}**, amounting to **Rs{lowest_sales_date['Net_Amount']:,.2f}**.
+        The **average daily sales** during this period were **Rs{average_sales:,.2f}**. Monitoring these trends helps identify peak sales days and potential low points.
+        """)
 
     def display_top_sold_products(self, df):
         """Display top sold products."""
         st.subheader("Top Sold Products")
         top_products = df.groupby('Product_Name', as_index=False)['Quantity'].sum().sort_values(by='Quantity', ascending=False).head(5)
-        fig = px.bar(top_products, x='Product_Name', y='Quantity', text='Quantity', title="Top Sold Products")
+        fig = px.bar(top_products, x='Product_Name', y='Quantity', text='Quantity')
         st.plotly_chart(fig)
+        # Explanation for the chart
+        st.write(f"""
+        **Top Sold Products Insight:**
+        
+        This chart shows the top 5 products by quantity sold. The product with the highest sales is **{top_products.iloc[0]['Product_Name']}** 
+        with a total of **{top_products.iloc[0]['Quantity']}** units sold. Understanding which products are most popular can help 
+        focus inventory management and marketing efforts on these high-demand items.
+        """)
 
     def display_profit_insights(self, df):
         """Display profit insights through various visualizations."""
@@ -215,17 +251,82 @@ class PharmaceuticalSalesAnalysis:
         with col1:
             profit_by_month = df.groupby(by=['MonthName'], as_index=False)['Profit'].sum().sort_values('MonthName', key=lambda x: pd.to_datetime(x, format='%B'))
             self.plot_bar_chart(st, profit_by_month, "Profit Over Month", 'MonthName', 'Profit')
+            # Explanation for profit by month
+            highest_profit_month = profit_by_month.loc[profit_by_month['Profit'].idxmax()]['MonthName']
+            highest_profit_value = profit_by_month['Profit'].max()
+            st.write(f"""
+            **Monthly Profit Insight:**
+            The highest profit was recorded in **{highest_profit_month}**, with a total profit of **Rs{highest_profit_value:,.2f}**. 
+            This month likely had a boost in sales or higher-margin products driving profitability.
+            """)
         with col2:
             profit_by_category = df.groupby(by='Category', as_index=False)['Profit'].sum().sort_values(by='Profit', ascending=False).head(5)
             self.plot_pie_chart(st, profit_by_category, "Profit Distribution by Category", 'Category', 'Profit')
+            # Explanation for profit by category
+            top_category = profit_by_category.iloc[0]['Category']
+            top_category_profit = profit_by_category.iloc[0]['Profit']
+            st.write(f"""
+            **Category Profit Insight:**
+            The top contributing category is **{top_category}**, generating a profit of **Rs{top_category_profit:,.2f}**. 
+            Focusing on this category could further boost overall profitability.
+            """)
+    
+    def display_top_profit_products(self, df):
+        """Display top Profit products."""
+        st.subheader("Top Profit Products")
+        
+        # Group by product and calculate sum of profit
+        top_products = df.groupby('Product_Name', as_index=False)['Profit'].sum()
+        
+        # Round the Profit column to 2 decimal places
+        top_products['Profit'] = top_products['Profit'].round(2)
+        
+        # Sort by Profit in descending order and take the top 5
+        top_products = top_products.sort_values(by='Profit', ascending=False).head(5)
+        
+        # Create the bar chart
+        fig = px.bar(top_products, x='Product_Name', y='Profit', text='Profit')
+        
+        # Plot the chart
+        st.plotly_chart(fig)
+        # Explanation of the chart
+        st.write(f"""
+        **Top Profit Products Insight:**
+        
+        This chart displays the top 5 products based on their total profit. The product with the highest profit is **{top_products.iloc[0]['Product_Name']}**, 
+        generating a total profit of **Rs{top_products.iloc[0]['Profit']:,.2f}**. Understanding which products contribute most to profitability helps in 
+        focusing sales efforts and inventory management on these key items.
+        """)
 
-    # def display_correlation_analysis(self, df):
-    #     """Display correlation analysis among numerical features."""
-    #     st.subheader("Correlation Analysis")
-    #     plt.figure(figsize=(10, 6))
-    #     correlation_matrix = df.corr()
-    #     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
-    #     st.pyplot(plt)
+
+    def display_profit_trend(self, df):
+        """Display Profit trend over time."""
+        st.subheader("Profit Trend Over Time")
+        sales_trend = df.groupby(by='Date', as_index=False)['Profit'].sum()
+
+        highest_profit_date = sales_trend.loc[sales_trend['Profit'].idxmax()]
+        lowest_profit_date = sales_trend.loc[sales_trend['Profit'].idxmin()]
+        average_profit = sales_trend['Profit'].mean()
+
+        fig = px.line(sales_trend, x='Date', y='Profit', markers=True, template='plotly_dark')
+        fig.add_trace(go.Scatter(x=[highest_profit_date['Date']], y=[highest_profit_date['Profit']],
+                                  mode='markers+text', name='Highest Profit', text=[f'Highest Profit: Rs{highest_profit_date["Profit"]:,.2f}'],
+                                  textposition='top center', marker=dict(color='red', size=10)))
+        fig.add_trace(go.Scatter(x=[lowest_profit_date['Date']], y=[lowest_profit_date['Profit']],
+                                  mode='markers+text', name='Lowest Profit', text=[f'Lowest Profit: Rs{lowest_profit_date["Profit"]:,.2f}'],
+                                  textposition='bottom center', marker=dict(color='green', size=10)))
+
+        st.plotly_chart(fig)
+        # Explanation for the chart
+        st.write(f"""
+        **Profit Trend Insight:**
+
+        This chart shows the fluctuation of profits over time. The **highest profit** was recorded on **{highest_profit_date['Date']}** 
+        with a total of **Rs{highest_profit_date['Profit']:,.2f}**, while the **lowest profit** occurred on **{lowest_profit_date['Date']}** 
+        with a profit of **Rs{lowest_profit_date['Profit']:,.2f}**. The **average daily profit** over the period is **Rs{average_profit:,.2f}**.
+        Monitoring these trends helps identify profitable periods and potential areas for improvement.
+            """)
+
 
     def show(self):
         """Show the analysis."""
