@@ -115,7 +115,7 @@ class SalesAnalysis:
         return df
 
     def display_kpis(self, df):
-        """Display key performance indicators."""
+        """Display key performance indica tors."""
         total_sales = df['Net_Amount'].sum()
         total_profit = df['Profit'].sum()
         total_discount = df['Discount'].sum()
